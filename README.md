@@ -1,13 +1,13 @@
 # SocketServer
-
 A lightweight, high-performance TCP socket library for .NET Framework, built directly on
 `SocketAsyncEventArgs` (SAEA) instead of the classic Begin/End (APM) pattern - no per-I/O
 allocation on the hot path, and built to scale to thousands of concurrent connections.
 
 ## Introduction
-
-*(to be completed)*
-
+When creating and testing this project I've personally used .NET framework 4.8 because I was testing my own use case.
+However, you can change that to whatever your needs require, I'd also recommend consuming this as a dll library 
+which represents "raw" layer socket at your project, that being said I've hooked up a tiny quick-start in Program.cs file
+So it is runnable.
 ## Features
 
 - **SAEA-based I/O** - each connection reuses one recv args and one send args for its entire
@@ -23,8 +23,6 @@ allocation on the hot path, and built to scale to thousands of concurrent connec
 - **Thread-safe sends** - `Connection.Send()` can be called from any thread.
 
 ## Requirements
-
-- .NET Framework 4.8
 - C# `latest` language version
 
 ## Getting Started
@@ -36,76 +34,10 @@ forwards every accepted connection to `RemoteIp:RemotePort`, configured via `App
 <appSettings>
   <add key="BindIp" value="127.0.0.1" />
   <add key="BindPort" value="13779" />
-  <add key="RemoteIp" value="25.45.33.235" />
-  <add key="RemotePort" value="15779" />
+  <add key="RemoteIp" value="Real Server IP" />
+  <add key="RemotePort" value="Real Server Port" />
   <add key="VerboseLogging" value="true" />
 </appSettings>
-```
-
-Build and run:
-
-```
-dotnet build
-dotnet bin/Debug/net48/SocketServer.dll
-```
-
-## Consuming as a Library
-
-Add a reference to `SocketServer.dll` (or the project itself) from your own application - the
-library has no dependency on `Program.cs`/`Config.cs`, which are only the bundled demo.
-
-```csharp
-using System;
-using System.Net;
-using SocketServer;
-
-class EchoServer
-{
-    static void Main()
-    {
-        var listener = new Listener();
-
-        listener.Accepted += OnClientConnected;
-        listener.AcceptError += ex => Console.WriteLine($"Accept error: {ex.Message}");
-
-        listener.Start(IPAddress.Any, 9000);
-        Console.WriteLine("Echo server listening on port 9000 - press any key to stop.");
-        Console.ReadKey(true);
-
-        listener.Stop();
-    }
-
-    static void OnClientConnected(Connection client)
-    {
-        Console.WriteLine($"Client connected: {client.Socket.RemoteEndPoint}");
-
-        client.Received += (conn, buffer, offset, length) =>
-        {
-            // Echo whatever was received straight back.
-            var data = new byte[length];
-            Buffer.BlockCopy(buffer, offset, data, 0, length);
-            conn.Send(data);
-        };
-
-        client.Disconnected += conn =>
-            Console.WriteLine($"Client disconnected: {conn.Socket.RemoteEndPoint}");
-
-        client.Start();
-    }
-}
-```
-
-### Dialing out with `Connector`
-
-```csharp
-Connector.Connect("example.com", 443,
-    onConnected: connection =>
-    {
-        connection.Received += (conn, buffer, offset, length) => { /* handle response */ };
-        connection.Start();
-        connection.Send(requestBytes);
-    },
-    onFailed: error => Console.WriteLine($"Connect failed: {error}"));
 ```
 
 ### API at a glance
