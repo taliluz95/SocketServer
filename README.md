@@ -3,7 +3,7 @@ A lightweight, high-performance TCP socket library for .NET Framework, built dir
 `SocketAsyncEventArgs` (SAEA) instead of the classic Begin/End (APM) pattern - no per-I/O
 allocation on the hot path, and built to scale to thousands of concurrent connections.
 
-## Introduction
+## Remarks
 When creating and testing this project I've personally used .NET framework 4.8 because I was testing my own use case.
 However, you can change that to whatever your needs require, I'd also recommend consuming this as a dll library 
 which represents the initial socket layer at your project, that being said I've hooked up a tiny quick-start in Program.cs file
