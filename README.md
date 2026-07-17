@@ -6,8 +6,8 @@ allocation on the hot path, and built to scale to thousands of concurrent connec
 ## Introduction
 When creating and testing this project I've personally used .NET framework 4.8 because I was testing my own use case.
 However, you can change that to whatever your needs require, I'd also recommend consuming this as a dll library 
-which represents "raw" layer socket at your project, that being said I've hooked up a tiny quick-start in Program.cs file
-So it is runnable.
+which represents the initial socket layer at your project, that being said I've hooked up a tiny quick-start in Program.cs file
+So it is runnable by default.
 ## Features
 
 - **SAEA-based I/O** - each connection reuses one recv args and one send args for its entire
@@ -34,8 +34,8 @@ forwards every accepted connection to `RemoteIp:RemotePort`, configured via `App
 <appSettings>
   <add key="BindIp" value="127.0.0.1" />
   <add key="BindPort" value="13779" />
-  <add key="RemoteIp" value="Real Server IP" />
-  <add key="RemotePort" value="Real Server Port" />
+  <add key="RemoteIp" value="Destination Host IP" />
+  <add key="RemotePort" value="Destination Host Port" />
   <add key="VerboseLogging" value="true" />
 </appSettings>
 ```
